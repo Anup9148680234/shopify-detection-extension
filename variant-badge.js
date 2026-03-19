@@ -10,7 +10,7 @@
       position:      'absolute',
       top:           '12px',
       left:          '12px',
-      color:         '#fff',
+      color:         '#000',
       padding:       '5px 14px',
       borderRadius:  '20px',
       fontSize:      '13px',
@@ -22,6 +22,7 @@
       opacity:       '0',
       transform:     'translateY(-6px)',
       background:    '#333', 
+      
     });
     return badge;
   }
