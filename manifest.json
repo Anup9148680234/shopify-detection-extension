@@ -6,13 +6,7 @@
   "permissions": ["activeTab", "scripting", "tabs", "storage"],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon-default-16.png"
-    }
-  },
-  "background": {
-    "service_worker": "background.js"
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
@@ -20,8 +14,5 @@
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ],
-  "icons": {
-    "16": "icons/icon-default-16.png"
-  }
+  ]
 }
