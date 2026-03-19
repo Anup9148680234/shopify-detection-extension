@@ -1,68 +1,53 @@
-# Shopify Detection Extension : Chrome Extension
+# Variant Badge : Shopify Console Snippet
 
-Automatically detects whether a website is built with Shopify and displays a banner at the top of the page.
-
----
-
-## Installation
-
-1. Download or unzip this folder to your computer
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable **Developer Mode**
-4. Click **"Load unpacked"** and select the `shopify-detection-extension` folder
-5. Done, the extension is now active
+A lightweight JavaScript snippet that detects the selected color variant on a Shopify product page and displays it as a badge over the main product image. No frameworks, no dependencies : just plain JS you can paste straight into the browser console.
 
 ---
 
-## Usage
+## What it does
 
-Just browse normally. The extension runs automatically on every page load.
-
-- 🟢 **Shopify site** : a dark banner slides in at the top:
-  `● DETECTED | Built with Shopify`
-
-- 🔴 **Non-Shopify site** : the banner shows:
-  `● NOT DETECTED | Not a Shopify storefront`
-
-Click the **✕** button on the right to dismiss the banner.
+- Reads whichever color variant is currently selected
+- Drops a small badge on the top-left corner of the product image showing the variant name (e.g. "Red", "Green", "Pink")
+- Updates the badge automatically whenever you switch to a different variant
+- Fades in smoothly on each update so it doesn't feel jarring
 
 ---
 
-## Test Sites
+## How to use it
 
-Try these known Shopify stores to verify the extension works:
+1. Open any product page on the store : for example:  
+   `https://technical-assessment-store.myshopify.com/products/mesmerizing-beagle-dog-can-sleeve`
 
-🟢 **Shopify sites**
+2. Open DevTools (`F12` or right-click > Inspect)
 
-- https://row.gymshark.com/
-- https://plumgoodness.com/
-- https://www.westside.com/
+3. Go to the **Console** tab
 
-🔴 **Non-Shopify site**
+4. Paste the entire snippet and hit **Enter**
 
-- https://www.google.com/
-- https://www.amazon.com/
+You should see `[VariantBadge] ✅ Ready` in the console and the badge will appear on the image right away.
 
 ---
 
-## File Structure
+## How it works
 
-```
-shopify-detector/
- - manifest.json   <- tells Chrome about the extension
- - content.js      <- detects Shopify and injects the banner
- - popup.html      <- initial HTML document
-```
+**Badge creation** : a `<div>` is created with `position: absolute` so it sits on top of the product image without affecting the layout.
+
+**Variant detection** : it looks for the currently checked radio input (`input[type="radio"]:checked`) and reads its `.value`. Using `.value` directly is important : reading the label's text would accidentally pull in hidden "Sold out" or "Unavailable" spans that Shopify injects into the DOM.
+
+**Change detection** : a single delegated `change` listener sits on `document` and watches for any radio input change. When one fires, it grabs the new value and updates the badge.
+
+**Animation** : on every update the badge fades out, swaps the text, then fades back in using a CSS `transition` and a small `setTimeout`.
 
 ---
 
-## How Detection Works
+## Store tested on
 
-The extension checks for these Shopify signals on every page:
+`https://technical-assessment-store.myshopify.com/collections/all`
 
-| Signal                       | Description                            |
-| ---------------------------- | -------------------------------------- |
-| `window.Shopify`             | Global JS object on all Shopify stores |
-| `shopify-checkout-api-token` | Meta tag injected by Shopify           |
-| `cdn.shopify.com` links      | Stylesheet links from Shopify's CDN    |
-| `cdn.shopify.com` scripts    | JS files loaded from Shopify's CDN     |
+---
+
+## Constraints
+
+- Plain JavaScript only : no jQuery, no libraries
+- Runs directly from the browser console
+- Designed for Shopify product pages with radio-style variant selectors
